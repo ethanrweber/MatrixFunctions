@@ -4,19 +4,15 @@ namespace MatrixFunctions
 {
     /// <summary>
     /// Library of matrix functions
-    /// available functions include:
-    ///     reduced row echelon form
-    ///     matrix addition/subtraction
-    ///     matrix multiplication
-    ///     get determinant
-    ///     get sub-matrix
+    /// implementations are non-generic and specify type decimal to ensure reliability and accuracy
     /// </summary>
-    public static class Program
+    public static class Library
     {
         static void Main(string[] args)
         {
             decimal[,] m = {{1, -4, 2}, {-2, 8, -9}, {-1, 7, 0}};
             decimal[,] m2 = {{1, 2, -1, -4}, {2, 3, -1, -11}, {-2, 0, -3, 22}};
+
             Console.WriteLine("m:");
             PrintMatrix(m);
             Console.WriteLine("rref(m):");
@@ -27,8 +23,8 @@ namespace MatrixFunctions
             Console.WriteLine("rref(m2):");
             PrintMatrix(RREF(m2));
 
-            Console.WriteLine("m + m:");
-            PrintMatrix(AddMatrices(m, m));
+            Console.WriteLine("m transpose:");
+            PrintMatrix(Transpose(m));
 
             Console.ReadLine();
         }
@@ -100,6 +96,11 @@ namespace MatrixFunctions
                 lead++;
             }
 
+            // normalize zeroes: some zeroes are stored as 0.0000000000000000, so fix and save as 0
+            for(int i = 0; i < rowCount; i++)
+                for(int j = 0; j < columnCount; j++)
+                    if (matrix[i, j] == 0)
+                        matrix[i, j] = 0;
             return matrix;
         }
 
@@ -120,8 +121,8 @@ namespace MatrixFunctions
             Console.WriteLine();
         }
 
-        public static decimal[,] AddMatrices(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, true);
-        public static decimal[,] SubtractMatrices(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, false);
+        public static decimal[,] MatrixAdd(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, true);
+        public static decimal[,] MatrixSubtract(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, false);
 
         /// <summary>
         /// private method for matrix addition/subtraction with matrices a,b
@@ -148,19 +149,24 @@ namespace MatrixFunctions
             return matrix;
         }
 
-        public static int[,] MultiplyMatrices(int[,] a, int[,] b)
+        /// <summary>
+        /// multiplies matrix a by matrix b and returns the resulting matrix
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static decimal[,] MatrixMultiply(decimal[,] a, decimal[,] b)
         {
             if(a.GetLength(1) != b.GetLength(0))
                 throw new Exception("cannot multiply matrices of different sizes");
 
             int m = a.GetLength(0), n = b.GetLength(1);
-            int[,] result = new int[a.GetLength(0), b.GetLength(1)];
-
+            decimal[,] result = new decimal[m, n];
 
             for(int i = 0; i < m; i++)
                 for(int j = 0; j < n; j++)
                 {
-                    int sum = 0;
+                    decimal sum = 0;
                     for (int k = 0; k < m; k++)
                         sum += a[i, k] * b[k, j];
                     result[i, j] = sum;
@@ -169,6 +175,26 @@ namespace MatrixFunctions
             return result;
         }
 
+        /// <summary>
+        /// multiplies a matrix by a scalar and returns the result as a new matrix
+        /// </summary>
+        /// <param name="scalar"></param>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        public static decimal[,] MatrixMultiply(decimal[,] matrix, decimal scalar)
+        {
+            decimal[,] copy = _Deepcopy(matrix);
+            for(int i = 0; i < copy.GetLength(0); i++)
+                for (int j = 0; j < copy.GetLength(0); j++)
+                    copy[i, j] *= scalar;
+            return copy;
+        }
+
+        /// <summary>
+        /// computes the determinant of a matrix
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
         public static decimal GetDeterminant(decimal[,] matrix)
         {
             int n = matrix.GetLength(0);
@@ -215,5 +241,61 @@ namespace MatrixFunctions
 
             return matrix;
         }
+
+        /// <summary>
+        /// generates an identity matrix of size n x n
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static decimal[,] Identity(int n)
+        {
+            decimal[,] identity = new decimal[n,n];
+            for (int i = 0; i < n; i++)
+                identity[i, i] = 1;
+            return identity;
+        }
+
+        /// <summary>
+        /// computes the transpose of a matrix
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        public static decimal[,] Transpose(decimal[,] matrix)
+        {
+            int n = matrix.GetLength(0), m = matrix.GetLength(1);
+
+            decimal[,] transpose = new decimal[m, n];
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++)
+                    transpose[i, j] = matrix[j, i];
+            return transpose;
+        }
+
+        /// <summary>
+        /// determines if the column vectors of a given matrix are linearly independent
+        /// by computing the determinant of the matrix
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns>true if the column vectors of the matrix are linearly independent, else false</returns>
+        public static bool IsLinearlyIndependent(this decimal[,] matrix)
+        {
+            int n = matrix.GetLength(0), m = matrix.GetLength(1);
+
+            // more column vectors than equations means linearly dependent
+            if (m > n) return false;
+
+            // compare rref to identity matrix
+            var rref = RREF(matrix);
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == j) continue;
+                    if (rref[i, j] != 0)
+                        return false;
+                }
+
+            return true;
+        } 
+        
     }
 }

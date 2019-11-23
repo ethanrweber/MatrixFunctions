@@ -8,6 +8,7 @@ namespace MatrixFunctions
     /// </summary>
     public static class Library
     {
+        // todo: fix decimal printing error
         static void Main(string[] args)
         {
             decimal[,] m = {{1, -4, 2}, {-2, 8, -9}, {-1, 7, 0}};
@@ -25,6 +26,9 @@ namespace MatrixFunctions
 
             Console.WriteLine("m transpose:");
             PrintMatrix(Transpose(m));
+
+            Console.WriteLine("m inverse:");
+            PrintMatrix(Inverse(m));
 
             Console.ReadLine();
         }
@@ -99,7 +103,7 @@ namespace MatrixFunctions
             // normalize zeroes: some zeroes are stored as 0.0000000000000000, so fix and save as 0
             for(int i = 0; i < rowCount; i++)
                 for(int j = 0; j < columnCount; j++)
-                    if (matrix[i, j] == 0)
+                    if (matrix[i, j] == 0)  
                         matrix[i, j] = 0;
             return matrix;
         }
@@ -114,7 +118,9 @@ namespace MatrixFunctions
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
+                {
                     Console.Write(Math.Round(matrix[i,j], round) + "\t");
+                }
 
                 Console.WriteLine();
             }
@@ -269,6 +275,39 @@ namespace MatrixFunctions
                 for (int j = 0; j < n; j++)
                     transpose[i, j] = matrix[j, i];
             return transpose;
+        }
+
+        public static decimal[,] Inverse(decimal[,] matrix)
+        {
+            int n = matrix.GetLength(0);
+            if (n != matrix.GetLength(1))
+                throw new Exception("cannot inverse a non- n x n matrix");
+
+            decimal[,] toRref = new decimal[n, 2 * n];
+            int k = 0;
+            for(int i = 0; i < n; i++)
+            { 
+                for(int j = 0; j < n; j++)
+                    toRref[i,j] = matrix[i,j];
+
+                for (int j = n; j < 2 * n; j++)
+                    toRref[i, j] = 0;
+                toRref[i, i + n] = 1;
+            }
+
+            decimal[,] rref = RREF(toRref);
+
+            decimal[,] result = new decimal[n,n];
+            for(int i = 0; i < n; i++)
+                for (int j = n; j < 2 * n; j++)
+                    result[i, j - n] = rref[i, j];
+
+            Console.WriteLine("mat * res = In");
+            PrintMatrix(MatrixMultiply(result, matrix));
+
+            Console.WriteLine("actual result");
+
+            return result;
         }
 
         /// <summary>

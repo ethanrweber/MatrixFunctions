@@ -4,7 +4,6 @@ C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\bin\Debug\netc
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\bin\Debug\netcoreapp2.1\MatrixFunctions.dll
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\bin\Debug\netcoreapp2.1\MatrixFunctions.pdb
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\obj\Debug\netcoreapp2.1\MatrixFunctions.csprojAssemblyReference.cache
-C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\obj\Debug\netcoreapp2.1\MatrixFunctions.csproj.CoreCompileInputs.cache
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\obj\Debug\netcoreapp2.1\MatrixFunctions.AssemblyInfoInputs.cache
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\obj\Debug\netcoreapp2.1\MatrixFunctions.AssemblyInfo.cs
 C:\Users\Ethan Weber\source\repos\MatrixFunctions\MatrixFunctions\obj\Debug\netcoreapp2.1\MatrixFunctions.dll

@@ -8,27 +8,20 @@ namespace MatrixFunctions
     /// </summary>
     public static class Library
     {
-        // todo: fix decimal printing error
         static void Main(string[] args)
         {
             decimal[,] m = {{1, -4, 2}, {-2, 8, -9}, {-1, 7, 0}};
             decimal[,] m2 = {{1, 2, -1, -4}, {2, 3, -1, -11}, {-2, 0, -3, 22}};
+            decimal[,] m3 = {{1, 2, -1, 4}, {-2, 1, 7, 2}, {-1, -4, -1, 3}, {3, 2, -7, -1}};
 
-            Console.WriteLine("m:");
-            PrintMatrix(m);
-            Console.WriteLine("rref(m):");
-            PrintMatrix(RREF(m));
+            Console.WriteLine("m3");
+            PrintMatrix(m3);
 
-            Console.WriteLine("m2:");
-            PrintMatrix(m2);
-            Console.WriteLine("rref(m2):");
-            PrintMatrix(RREF(m2));
+            Console.WriteLine("rref(m3)");
+            PrintMatrix(RREF(m3));
 
-            Console.WriteLine("m transpose:");
-            PrintMatrix(Transpose(m));
-
-            Console.WriteLine("m inverse:");
-            PrintMatrix(Inverse(m));
+            Console.WriteLine("basis of colspace(m3)");
+            PrintMatrix(GetColumnSpaceBasis(m3));
 
             Console.ReadLine();
         }
@@ -76,7 +69,7 @@ namespace MatrixFunctions
                         }
                     }
                 }
-                // swap rows i and r
+
                 for (int k = 0; k < columnCount; k++)
                 {
                     decimal temp = matrix[i, k];
@@ -94,17 +87,16 @@ namespace MatrixFunctions
                     {
                         var mult = matrix[j, lead];
                         for (int k = 0; k < columnCount; k++)
-                            matrix[j, k] -= mult * matrix[r, k];
+                        {
+                            matrix[j, k] = matrix[j,k] -  mult * matrix[r, k];
+                            if (matrix[j, k] == (int) matrix[j, k])
+                                matrix[j, k] = (int) matrix[j, k]; // remove rounding issue
+                        }
                     }
 
                 lead++;
             }
 
-            // normalize zeroes: some zeroes are stored as 0.0000000000000000, so fix and save as 0
-            for(int i = 0; i < rowCount; i++)
-                for(int j = 0; j < columnCount; j++)
-                    if (matrix[i, j] == 0)  
-                        matrix[i, j] = 0;
             return matrix;
         }
 
@@ -118,10 +110,8 @@ namespace MatrixFunctions
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    Console.Write(Math.Round(matrix[i,j], round) + "\t");
-                }
-
+                    //Console.Write(Math.Round(matrix[i,j], round) + "\t");
+                    Console.Write(matrix[i,j] + "\t");
                 Console.WriteLine();
             }
             Console.WriteLine();
@@ -253,7 +243,7 @@ namespace MatrixFunctions
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public static decimal[,] Identity(int n)
+        public static decimal[,] GetIdentity(int n)
         {
             decimal[,] identity = new decimal[n,n];
             for (int i = 0; i < n; i++)
@@ -266,7 +256,7 @@ namespace MatrixFunctions
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static decimal[,] Transpose(decimal[,] matrix)
+        public static decimal[,] GetTranspose(decimal[,] matrix)
         {
             int n = matrix.GetLength(0), m = matrix.GetLength(1);
 
@@ -277,14 +267,13 @@ namespace MatrixFunctions
             return transpose;
         }
 
-        public static decimal[,] Inverse(decimal[,] matrix)
+        public static decimal[,] GetInverse(decimal[,] matrix)
         {
             int n = matrix.GetLength(0);
             if (n != matrix.GetLength(1))
                 throw new Exception("cannot inverse a non- n x n matrix");
 
             decimal[,] toRref = new decimal[n, 2 * n];
-            int k = 0;
             for(int i = 0; i < n; i++)
             { 
                 for(int j = 0; j < n; j++)
@@ -302,13 +291,54 @@ namespace MatrixFunctions
                 for (int j = n; j < 2 * n; j++)
                     result[i, j - n] = rref[i, j];
 
-            Console.WriteLine("mat * res = In");
-            PrintMatrix(MatrixMultiply(result, matrix));
-
-            Console.WriteLine("actual result");
-
             return result;
         }
+
+        //public static decimal GetDimension(decimal[,] matrix)
+        //{
+
+        //}
+
+        /// <summary>
+        /// returns the basis of the column space of a matrix as a matrix
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        public static decimal[,] GetColumnSpaceBasis(decimal[,] matrix)
+        {
+            decimal[,] rref = RREF(matrix);
+            bool[] pivotCols = new bool[rref.GetLength(1)];
+            for (int j = 0; j < rref.GetLength(1); j++)
+            {
+                bool pivotCol = false, foundOne = false;
+                for (int i = 0; i < rref.GetLength(0); i++)
+                {
+                    if (!foundOne)
+                    {
+                        if (rref[i, j] != 1)
+                            continue;
+                        foundOne = true;
+                    }
+
+                    pivotCol = true;
+                    if (rref[i, j] != 0)
+                    {
+                        pivotCol = false;
+                        break;
+                    }
+                }
+
+                pivotCols[j] = pivotCol;
+            }
+            return new decimal[0,0];
+        }
+
+        public static decimal[,] GetRowSpace(decimal[,] matrix) => GetTranspose(matrix);
+        //public static decimal[,] GetNullSpace(decimal[,] matrix)
+        //{
+
+        //}
+
 
         /// <summary>
         /// determines if the column vectors of a given matrix are linearly independent

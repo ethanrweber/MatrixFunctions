@@ -6,12 +6,14 @@ namespace MatrixFunctions
 {
     public class Matrix
     {
+        // properties
         public decimal[,] grid { get; set; }
         public int rows => grid.GetLength(0);
         public int columns => grid.GetLength(1);
         private int n => rows;
         private int m => columns;
 
+        // constructors
         public Matrix(decimal[,] matrix)
         {
             grid = matrix;
@@ -19,29 +21,17 @@ namespace MatrixFunctions
 
         public Matrix(Matrix a)
         {
-            grid = a.grid;
-            // todo: test - copy by value or reference?
-            //grid = new decimal[a.rows,a.columns];
-            //for (int i = 0; i < a.rows; i++)
-            //{
-            //    for (int j = 0; j < a.columns; j++)
-            //    {
-            //        grid[i, j] = a.grid[i, j];
-            //    }
-            //}
+            grid = new decimal[a.rows, a.columns];
+            for (int i = 0; i < a.rows; i++)
+                for (int j = 0; j < a.columns; j++)
+                    grid[i, j] = a.grid[i, j];
         }
 
-
-        protected decimal this[int i, int j]
+        // indexer
+        public decimal this[int i, int j]
         {
-            get => grid[i, j];
-            set
-            {
-                if (value.GetType() != typeof(decimal))
-                    throw new ArgumentException("Invalid Argument Exception: value must be type decimal");
-                
-                grid[i, j] = value;
-            }
+            get => grid[i, j]; 
+            set => grid[i, j] = value;
         }
 
         public static Matrix operator +(Matrix a) => a;

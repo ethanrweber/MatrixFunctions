@@ -6,11 +6,11 @@ namespace MatrixFunctions
     /// Library of matrix functions
     /// implementations are non-generic and specify type decimal to ensure reliability and accuracy
     /// </summary>
-    public static class Library
+    public static class MatrixExtensions
     {
         static void Main(string[] args)
         {
-            decimal[,] m = {{1, -4, 2}, {-2, 8, -9}, {-1, 7, 0}};
+            //Matrix m = {{1, -4, 2}, {-2, 8, -9}, {-1, 7, 0}};
             decimal[,] m2 = {{1, 2, -1, -4}, {2, 3, -1, -11}, {-2, 0, -3, 22}};
             decimal[,] m3 = {{1, 2, -1, 4}, {-2, 1, 7, 2}, {-1, -4, -1, 3}, {3, 2, -7, -1}};
 
@@ -105,86 +105,17 @@ namespace MatrixFunctions
         /// </summary>
         /// <param name="matrix">matrix to be printed</param>
         /// <param name="round">number of decimal points to round answers, default 2</param>
-        public static void PrintMatrix(decimal[,] matrix, int round=2)
+        public static void PrintMatrix(decimal[,] m, int round = 2)
         {
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            Matrix matrix = new Matrix(m);
+            for (int i = 0; i < matrix.rows; i++)
             {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                    //Console.Write(Math.Round(matrix[i,j], round) + "\t");
-                    Console.Write(matrix[i,j] + "\t");
+                for (int j = 0; j < matrix.rows; j++)
+                    Console.Write(decimal.Round(matrix[i, j]) + '\t');
                 Console.WriteLine();
             }
-            Console.WriteLine();
         }
 
-        public static decimal[,] MatrixAdd(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, true);
-        public static decimal[,] MatrixSubtract(decimal[,] a, decimal[,] b) => _MatrixAdditionSubtraction(a, b, false);
-
-        /// <summary>
-        /// private method for matrix addition/subtraction with matrices a,b
-        /// addition or subtraction is determined by operation param (add = true, subtract = false)
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="operation"></param>
-        /// <returns></returns>
-        private static decimal[,] _MatrixAdditionSubtraction(decimal[,] a, decimal[,] b, bool operation)
-        {
-            if (a.GetLength(0) != b.GetLength(0) || a.GetLength(1) != b.GetLength(1))
-                throw new Exception("cannot add matrices of different sizes");
-
-            decimal[,] matrix = _Deepcopy(a);
-
-            for (int i = 0; i < matrix.GetLength(0); i++)
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                    if (operation)
-                        matrix[i, j] += b[i, j];
-                    else
-                        matrix[i, j] -= b[i, j];
-
-            return matrix;
-        }
-
-        /// <summary>
-        /// multiplies matrix a by matrix b and returns the resulting matrix
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static decimal[,] MatrixMultiply(decimal[,] a, decimal[,] b)
-        {
-            if(a.GetLength(1) != b.GetLength(0))
-                throw new Exception("cannot multiply matrices of different sizes");
-
-            int m = a.GetLength(0), n = b.GetLength(1);
-            decimal[,] result = new decimal[m, n];
-
-            for(int i = 0; i < m; i++)
-                for(int j = 0; j < n; j++)
-                {
-                    decimal sum = 0;
-                    for (int k = 0; k < m; k++)
-                        sum += a[i, k] * b[k, j];
-                    result[i, j] = sum;
-                }
-
-            return result;
-        }
-
-        /// <summary>
-        /// multiplies a matrix by a scalar and returns the result as a new matrix
-        /// </summary>
-        /// <param name="scalar"></param>
-        /// <param name="matrix"></param>
-        /// <returns></returns>
-        public static decimal[,] MatrixMultiply(decimal[,] matrix, decimal scalar)
-        {
-            decimal[,] copy = _Deepcopy(matrix);
-            for(int i = 0; i < copy.GetLength(0); i++)
-                for (int j = 0; j < copy.GetLength(0); j++)
-                    copy[i, j] *= scalar;
-            return copy;
-        }
 
         /// <summary>
         /// computes the determinant of a matrix

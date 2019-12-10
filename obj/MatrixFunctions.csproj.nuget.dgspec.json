@@ -1,26 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ethan Weber\\source\\repos\\MatrixFunctions\\MatrixFunctions\\MatrixFunctions.csproj": {}
+    "C:\\Users\\eweber01\\Source\\Repos\\MatrixFunctions\\MatrixFunctions.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ethan Weber\\source\\repos\\MatrixFunctions\\MatrixFunctions\\MatrixFunctions.csproj": {
+    "C:\\Users\\eweber01\\Source\\Repos\\MatrixFunctions\\MatrixFunctions.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ethan Weber\\source\\repos\\MatrixFunctions\\MatrixFunctions\\MatrixFunctions.csproj",
+        "projectUniqueName": "C:\\Users\\eweber01\\Source\\Repos\\MatrixFunctions\\MatrixFunctions.csproj",
         "projectName": "MatrixFunctions",
-        "projectPath": "C:\\Users\\Ethan Weber\\source\\repos\\MatrixFunctions\\MatrixFunctions\\MatrixFunctions.csproj",
-        "packagesPath": "C:\\Users\\Ethan Weber\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ethan Weber\\source\\repos\\MatrixFunctions\\MatrixFunctions\\obj\\",
+        "projectPath": "C:\\Users\\eweber01\\Source\\Repos\\MatrixFunctions\\MatrixFunctions.csproj",
+        "packagesPath": "C:\\Users\\eweber01\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\eweber01\\Source\\Repos\\MatrixFunctions\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ethan Weber\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\eweber01\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.1"
@@ -44,23 +42,16 @@
         "netcoreapp2.1": {
           "dependencies": {
             "Microsoft.NETCore.App": {
-              "suppressParent": "All",
               "target": "Package",
               "version": "[2.1.0, )",
               "autoReferenced": true
             }
           },
           "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
+            "net461"
           ],
           "assetTargetFallback": true,
-          "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "warn": true
         }
       }
     }
